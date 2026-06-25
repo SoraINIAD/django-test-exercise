@@ -9,6 +9,6 @@ class Task(models.Model):
     due_at = models.DateTimeField(null=True, blank=True)
 
     def is_overdue(self, dt):
-      if self.due_at is None:
-          return False
-      return self.due_at < dt
+        if self.due_at is None:
+            return False
+        return self.due_at < dt
