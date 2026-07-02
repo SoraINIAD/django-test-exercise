@@ -49,3 +49,8 @@ def update(request, task_id):
         'task': task
     }
     return render(request, "todo/edit.html", context)
+  
+  
+def delete(request, task_id):
+    task.delete()
+    return redirect(index)
