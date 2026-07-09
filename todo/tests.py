@@ -99,6 +99,19 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(response.context['tasks'][0], task1)
         self.assertEqual(response.context['tasks'][1], task2)
 
+    def test_index_get_title_search(self):
+        task1 = Task(title='Buy milk', due_at=timezone.make_aware(datetime(2024, 7, 1)))
+        task1.save()
+        task2 = Task(title='Read book', due_at=timezone.make_aware(datetime(2024, 8, 1)))
+        task2.save()
+        client = Client()
+        response = client.get('/?q=book')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.templates[0].name, 'todo/index.html')
+        self.assertEqual(list(response.context['tasks']), [task2])
+        self.assertEqual(response.context['title_query'], 'book')
+
     def test_detail_get_success(self):
         task = Task(title='task1', due_at=timezone.make_aware(datetime(2024, 7, 1)))
         task.save()
