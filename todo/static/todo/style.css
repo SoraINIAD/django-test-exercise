@@ -110,6 +110,26 @@ ul {
   color: #c8d4e5;
 }
 
+body > ul {
+  width: min(100%, 760px);
+  margin: 0 auto 1.5rem;
+  padding: 1.25rem 1.35rem;
+  list-style: none;
+  background: rgba(9, 17, 32, 0.72);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 20px;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 20px 60px rgba(3, 8, 20, 0.35);
+}
+
+body > ul li {
+  padding: 0.45rem 0;
+}
+
+body > ul li + li {
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+
 .text h2 {
   margin-top: 0;
 }
