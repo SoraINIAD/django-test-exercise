@@ -114,3 +114,21 @@ class TodoViewTestCase(TestCase):
         response = client.get('/1/')
 
         self.assertEqual(response.status_code, 404)
+
+    def test_close_success(self):
+        task = Task(title='task1')
+        task.save()
+        self.assertFalse(task.completed)
+        client = Client()
+        response = client.get('/{}/close'.format(task.pk))
+
+        self.assertEqual(response.status_code, 302)
+
+        task = Task.objects.get(pk=task.pk)
+        self.assertTrue(task.completed)
+
+    def test_close_fail(self):
+        client = Client()
+        response = client.get('/1/close')
+
+        self.assertEqual(response.status_code, 404)
