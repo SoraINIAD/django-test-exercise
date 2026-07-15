@@ -111,6 +111,29 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(response.templates[0].name, 'todo/index.html')
         self.assertEqual(list(response.context['tasks']), [task2])
         self.assertEqual(response.context['title_query'], 'book')
+    def test_index_get_show_pending(self):
+        task1 = Task(title='pending task')
+        task1.save()
+        task2 = Task(title='completed task', completed=True)
+        task2.save()
+        client = Client()
+        response = client.get('/?show_completed=pending')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['show_completed'], 'pending')
+        self.assertEqual(list(response.context['tasks']), [task1])
+
+    def test_index_get_show_completed(self):
+        task1 = Task(title='pending task')
+        task1.save()
+        task2 = Task(title='completed task', completed=True)
+        task2.save()
+        client = Client()
+        response = client.get('/?show_completed=completed')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['show_completed'], 'completed')
+        self.assertEqual(list(response.context['tasks']), [task2])
 
     def test_detail_get_success(self):
         task = Task(title='task1', due_at=timezone.make_aware(datetime(2024, 7, 1)))
