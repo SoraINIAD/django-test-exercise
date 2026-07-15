@@ -17,8 +17,15 @@ def index(request):
     else:
         tasks = Task.objects.order_by('-posted_at')
 
+    show_completed = request.GET.get('show_completed', 'all')
+    if show_completed == 'completed':
+        tasks = tasks.filter(completed=True)
+    elif show_completed == 'pending':
+        tasks = tasks.filter(completed=False)
+
     context = {
         'tasks': tasks,
+        'show_completed': show_completed,
     }
     return render(request, 'todo/index.html', context)
 

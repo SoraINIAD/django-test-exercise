@@ -33,6 +33,13 @@
       <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
     </div>
 
+    <div>
+      <strong>Filter:</strong>
+      <a href="{% url 'index' %}?show_completed=all{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" {% if show_completed == 'all' %}style="font-weight: bold; color: blue;"{% endif %}>All Tasks</a> |
+      <a href="{% url 'index' %}?show_completed=pending{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" {% if show_completed == 'pending' %}style="font-weight: bold; color: blue;"{% endif %}>Pending</a> |
+      <a href="{% url 'index' %}?show_completed=completed{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" {% if show_completed == 'completed' %}style="font-weight: bold; color: blue;"{% endif %}>Completed</a>
+    </div>
+
     {% for task in tasks %}
     <div class="text">
       <h2><a href="{% url 'detail' task.id %}">{{ task.title }}</a></h2>
