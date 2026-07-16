@@ -3,20 +3,19 @@
 <html lang="ja">
 
   <head>
-    <title>To Do Application</title>
+    <title>Todo Application</title>
     <meta charset="UTF-8">
     <meta name="author" content="INIAD">
     <link rel="stylesheet" href="{% static 'todo/style.css' %}?v=2">
   </head>
 
   <body>
-    <h1>Sample To Do Application</h1>
-    <p>You can submit tasks from the following form.</p>
+    <h1>Todo App</h1>
     <form action="{% url 'index' %}" method="post">
       {% csrf_token %}
       <div>
-        <label for="titleInput">Title</label><br>
-        <input id="titleInput" name="title" type="text" placeholder="Input title">
+        <label for="titleInput">タイトル</label><br>
+        <input id="titleInput" name="title" type="text" placeholder="タイトルを入力">
       </div>
       <div>
         <label for="contentInput">Content</label><br>
@@ -25,23 +24,108 @@
       <div>
         <label for="dueInput">Due at:</label><br>
         <input id="dueInput" name="due_at" type="datetime-local">
+        <label for="dueInput">締切日</label><br>
+        <input
+          id="dueInput"
+          name="due_at"
+          type="datetime-local"
+          onclick="if (this.showPicker) this.showPicker()"
+        >
       </div>
       <div>
-        <button type="submit">Submit</button>
+        <button type="submit">記録する</button>
+      </div>
+    </form>
+    <br>
+
+    <form action="{% url 'index' %}" method="get">
+      <label for="postedDateInput">記録日</label>
+      <input
+        id="postedDateInput"
+        name="posted_date"
+        type="date"
+        value="{{ posted_date }}"
+        onclick="if (this.showPicker) this.showPicker()"
+      >
+      <input type="hidden" name="show_completed" value="{{ show_completed }}">
+      <input type="hidden" name="order" value="{{ order }}">
+
+      <div class="search-field">
+        <label for="searchInput">タイトル検索</label><br>
+
+        <div class="search-input-wrap">
+          <input
+            id="searchInput"
+            name="q"
+            type="text"
+            placeholder="タイトルを入力"
+            value="{{ title_query }}"
+          >
+
+          <button
+            type="submit"
+            class="search-clear-button"
+            aria-label="Clear search"
+            onclick="document.getElementById('searchInput').value='';"
+          >
+          ×
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit">探す</button>
+
+        {% if posted_date or title_query %}
+        <a href="{% url 'index' %}?show_completed={{ show_completed }}&order={{ order }}">
+          リセット
+        </a>
+        {% endif %}
       </div>
     </form>
     <br>
 
     <div>
-      <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
-      <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
+      <a href="{% url 'index' %}?order=due&show_completed={{ show_completed }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}">
+        締切日順
+      </a>
+      |
+
+      <a href="{% url 'index' %}?order=post&show_completed={{ show_completed }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}">
+        記録日順
+      </a>
     </div>
 
     <div>
       <strong>Filter:</strong>
-      <a href="{% url 'index' %}?show_completed=all{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" {% if show_completed == 'all' %}style="font-weight: bold; color: blue;"{% endif %}>All Tasks</a> |
-      <a href="{% url 'index' %}?show_completed=pending{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" {% if show_completed == 'pending' %}style="font-weight: bold; color: blue;"{% endif %}>Pending</a> |
-      <a href="{% url 'index' %}?show_completed=completed{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" {% if show_completed == 'completed' %}style="font-weight: bold; color: blue;"{% endif %}>Completed</a>
+      <a
+        href="{% url 'index' %}?show_completed=all&order={{ order }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}"
+        {% if show_completed == 'all' %}
+          style="font-weight: bold; color: blue;"
+        {% endif %}
+      >
+        すべてのタスク
+      </a>
+      |
+
+      <a
+        href="{% url 'index' %}?show_completed=pending&order={{ order }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}"
+        {% if show_completed == 'pending' %}
+          style="font-weight: bold; color: blue;"
+        {% endif %}
+      >
+        未完了のタスク
+      </a>
+      |
+
+      <a
+        href="{% url 'index' %}?show_completed=completed&order={{ order }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}"
+        {% if show_completed == 'completed' %}
+          style="font-weight: bold; color: blue;"
+        {% endif %}
+      >
+        完了済みのタスク
+      </a>
     </div>
 
     {% for task in tasks %}
@@ -52,13 +136,14 @@
         {% if task.content %}
         <li>Content: {{ task.content }}</li>
         {% endif %}
+        <li>記録日: {{ task.posted_at }}</li>
         {% if task.due_at %}
-        <li>Due at: {{ task.due_at }}</li>
+        <li>締切日: {{ task.due_at }}</li>
         {% endif %}
         {% if task.completed %}
-        <li>Status: Completed</li>
+        <li>Status: 完了</li>
         {% else %}
-        <li>Status: Not Completed</li>
+        <li>Status: 未完了</li>
         {% endif %}
       </ul>
     </div>
