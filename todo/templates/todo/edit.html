@@ -6,7 +6,7 @@
     <title>To Do Application</title>
     <meta charset="UTF-8">
     <meta name="author" content="INIAD">
-    <link rel="stylesheet" href="{% static 'todo/style.css' %}">
+    <link rel="stylesheet" href="{% static 'todo/style.css' %}?v=2">
   </head>
 
   <body>
@@ -17,6 +17,10 @@
       <div>
         <label for="titleInput">Title</label><br>
         <input id="titleInput" name="title" type="text" placeholder="Input title" value="{{ task.title }}">
+      </div>
+      <div>
+        <label for="contentInput">Content</label><br>
+        <textarea class="task-textarea" id="contentInput" name="content" rows="4">{{ task.content }}</textarea>
       </div>
       <div>
         <label for="dueInput">Due at:</label><br>
