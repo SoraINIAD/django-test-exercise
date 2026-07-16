@@ -33,17 +33,6 @@
     <br>
 
     <form action="{% url 'index' %}" method="get">
-      <label for="postedDateInput">記録日</label>
-      <input
-        id="postedDateInput"
-        name="posted_date"
-        type="date"
-        value="{{ posted_date }}"
-        onclick="if (this.showPicker) this.showPicker()"
-      >
-      <input type="hidden" name="show_completed" value="{{ show_completed }}">
-      <input type="hidden" name="order" value="{{ order }}">
-
       <div class="search-field">
         <label for="searchInput">タイトル検索</label><br>
 
@@ -66,6 +55,17 @@
           </button>
         </div>
       </div>
+
+      <label for="postedDateInput">記録日</label>
+      <input
+        id="postedDateInput"
+        name="posted_date"
+        type="date"
+        value="{{ posted_date }}"
+        onclick="if (this.showPicker) this.showPicker()"
+      >
+      <input type="hidden" name="show_completed" value="{{ show_completed }}">
+      <input type="hidden" name="order" value="{{ order }}">
 
       <div>
         <button type="submit">探す</button>
@@ -131,9 +131,9 @@
         <li>締切日: {{ task.due_at }}</li>
         {% endif %}
         {% if task.completed %}
-        <li>Status: 完了</li>
+        <li>進捗: 完了</li>
         {% else %}
-        <li>Status: 未完了</li>
+        <li>進捗: 未完了</li>
         {% endif %}
       </ul>
     </div>
