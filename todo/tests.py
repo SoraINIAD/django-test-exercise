@@ -123,6 +123,18 @@ class TodoViewTestCase(TestCase):
         self.assertEqual(response.context['show_completed'], 'completed')
         self.assertEqual(list(response.context['tasks']), [task2])
 
+    def test_index_get_filter_by_posted_date(self):
+        task1 = Task(title='old task', posted_at=timezone.make_aware(datetime(2024, 7, 1, 10, 0, 0)))
+        task1.save()
+        task2 = Task(title='new task', posted_at=timezone.make_aware(datetime(2024, 7, 2, 10, 0, 0)))
+        task2.save()
+        client = Client()
+        response = client.get('/?posted_date=2024-07-01')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['posted_date'], '2024-07-01')
+        self.assertEqual(list(response.context['tasks']), [task1])
+
     def test_detail_get_success(self):
         task = Task(title='task1', due_at=timezone.make_aware(datetime(2024, 7, 1)))
         task.save()
