@@ -63,11 +63,13 @@ label {
 }
 
 input,
+textarea,
 button {
   font: inherit;
 }
 
-input {
+input,
+textarea.task-textarea {
   width: 100%;
   padding: 0.85rem 1rem;
   border: 1px solid rgba(148, 163, 184, 0.28);
@@ -76,10 +78,22 @@ input {
   color: #f8fbff;
 }
 
-input::placeholder {
+input::placeholder,
+textarea.task-textarea::placeholder {
   color: #8da0ba;
 }
 
+textarea.task-textarea {
+  display: block;
+  min-height: 7rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+textarea.task-textarea:focus {
+  outline: none;
+  border-color: rgba(77, 216, 255, 0.72);
+  box-shadow: 0 0 0 3px rgba(77, 216, 255, 0.16);
 .search-field {
   margin-bottom: 1rem;
 }
