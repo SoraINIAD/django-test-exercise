@@ -29,6 +29,14 @@
     <br>
 
     <form action="{% url 'index' %}" method="get">
+      {% if request.GET.order %}<input type="hidden" name="order" value="{{ request.GET.order }}">{% endif %}
+      {% if request.GET.show_completed %}<input type="hidden" name="show_completed" value="{{ request.GET.show_completed }}">{% endif %}
+      <label for="postedDateInput">Posted date:</label>
+      <input id="postedDateInput" name="posted_date" type="date" value="{{ posted_date }}">
+      <button type="submit">Search</button>
+      {% if posted_date %}
+      <a href="{% url 'index' %}{% if request.GET.order %}?order={{ request.GET.order }}{% endif %}{% if request.GET.show_completed %}{% if request.GET.order %}&{% endif %}show_completed={{ request.GET.show_completed }}{% endif %}">Clear</a>
+      {% endif %}
       <input type="hidden" name="show_completed" value="{{ show_completed }}">
       <input type="hidden" name="order" value="{{ order }}">
 
@@ -62,6 +70,8 @@
     <br>
 
     <div>
+      <a href="{% url 'index' %}?order=due{% if posted_date %}&posted_date={{ posted_date }}{% endif %}">Sort by Due Date</a> |
+      <a href="{% url 'index' %}?order=post{% if posted_date %}&posted_date={{ posted_date }}{% endif %}">Sort by Posted Date</a>
       <a href="{% url 'index' %}?order=due&show_completed={{ show_completed }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}">
         Sort by Due Date
       </a>
@@ -74,6 +84,9 @@
 
     <div>
       <strong>Filter:</strong>
+      <a href="{% url 'index' %}?show_completed=all{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if posted_date %}&posted_date={{ posted_date }}{% endif %}" {% if show_completed == 'all' %}style="font-weight: bold; color: blue;"{% endif %}>All Tasks</a> |
+      <a href="{% url 'index' %}?show_completed=pending{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if posted_date %}&posted_date={{ posted_date }}{% endif %}" {% if show_completed == 'pending' %}style="font-weight: bold; color: blue;"{% endif %}>Pending</a> |
+      <a href="{% url 'index' %}?show_completed=completed{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}{% if posted_date %}&posted_date={{ posted_date }}{% endif %}" {% if show_completed == 'completed' %}style="font-weight: bold; color: blue;"{% endif %}>Completed</a>
 
       <a
         href="{% url 'index' %}?show_completed=all&order={{ order }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}"

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.shortcuts import render, redirect
 from django.http import Http404
 from django.utils.timezone import make_aware
@@ -35,6 +37,14 @@ def index(request):
     elif show_completed == 'pending':
         tasks = tasks.filter(completed=False)
 
+    posted_date = request.GET.get('posted_date', '')
+    if posted_date:
+        try:
+            posted_date_obj = datetime.strptime(posted_date, '%Y-%m-%d').date()
+        except ValueError:
+            posted_date_obj = None
+        if posted_date_obj is not None:
+            tasks = tasks.filter(posted_at__date=posted_date_obj)
     if order == 'due':
         tasks = tasks.order_by('due_at')
     else:
@@ -44,6 +54,7 @@ def index(request):
         'tasks': tasks,
         'title_query': title_query,
         'show_completed': show_completed,
+        'posted_date': posted_date,
         'order': order,
     }
 
