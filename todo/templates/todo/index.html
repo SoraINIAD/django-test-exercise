@@ -20,7 +20,12 @@
       </div>
       <div>
         <label for="dueInput">Due at:</label><br>
-        <input id="dueInput" name="due_at" type="datetime-local">
+        <input
+          id="dueInput"
+          name="due_at"
+          type="datetime-local"
+          onclick="if (this.showPicker) this.showPicker()"
+        >
       </div>
       <div>
         <button type="submit">Submit</button>
