@@ -28,16 +28,81 @@
     </form>
     <br>
 
+    <form action="{% url 'index' %}" method="get">
+      <input type="hidden" name="show_completed" value="{{ show_completed }}">
+      <input type="hidden" name="order" value="{{ order }}">
+
+      <div class="search-field">
+        <label for="searchInput">Search title</label><br>
+
+        <div class="search-input-wrap">
+          <input
+            id="searchInput"
+            name="q"
+            type="text"
+            placeholder="Search by title"
+            value="{{ title_query }}"
+          >
+
+          <button
+            type="submit"
+            class="search-clear-button"
+            aria-label="Clear search"
+            onclick="document.getElementById('searchInput').value='';"
+          >
+          ×
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <button type="submit">Search</button>
+      </div>
+    </form>
+    <br>
+
     <div>
-      <a href="{% url 'index' %}?order=due">Sort by Due Date</a> |
-      <a href="{% url 'index' %}?order=post">Sort by Posted Date</a>
+      <a href="{% url 'index' %}?order=due&show_completed={{ show_completed }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}">
+        Sort by Due Date
+      </a>
+      |
+
+      <a href="{% url 'index' %}?order=post&show_completed={{ show_completed }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}">
+        Sort by Posted Date
+      </a>
     </div>
 
     <div>
       <strong>Filter:</strong>
-      <a href="{% url 'index' %}?show_completed=all{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" {% if show_completed == 'all' %}style="font-weight: bold; color: blue;"{% endif %}>All Tasks</a> |
-      <a href="{% url 'index' %}?show_completed=pending{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" {% if show_completed == 'pending' %}style="font-weight: bold; color: blue;"{% endif %}>Pending</a> |
-      <a href="{% url 'index' %}?show_completed=completed{% if request.GET.order %}&order={{ request.GET.order }}{% endif %}" {% if show_completed == 'completed' %}style="font-weight: bold; color: blue;"{% endif %}>Completed</a>
+
+      <a
+        href="{% url 'index' %}?show_completed=all&order={{ order }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}"
+        {% if show_completed == 'all' %}
+          style="font-weight: bold; color: blue;"
+        {% endif %}
+      >
+        All Tasks
+      </a>
+      |
+
+      <a
+        href="{% url 'index' %}?show_completed=pending&order={{ order }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}"
+        {% if show_completed == 'pending' %}
+          style="font-weight: bold; color: blue;"
+        {% endif %}
+      >
+        Pending
+      </a>
+      |
+
+      <a
+        href="{% url 'index' %}?show_completed=completed&order={{ order }}{% if title_query %}&q={{ title_query|urlencode }}{% endif %}"
+        {% if show_completed == 'completed' %}
+          style="font-weight: bold; color: blue;"
+        {% endif %}
+      >
+        Completed
+      </a>
     </div>
 
     {% for task in tasks %}
